@@ -4,7 +4,6 @@
 const body = document.querySelector('body');
 const gallery = document.getElementById('gallery');
 const searchContainer = document.querySelector('.search-container');
-const url = 'https://randomuser.me/api/';
 const imgUrl = 'https://randomuser.me/api/?nat=ie&results=12';
 let cards;
 let modal;
@@ -12,53 +11,44 @@ let modal;
 // ------------------------------------------
 //  FETCH FUNCTION
 // ------------------------------------------
-function fetchData(url) {
-    return fetch(url)
-        .then(checkStatus)
-        .then(res => res.json())
-        .catch(e => console.log('looks like there was a problem', e));
+async function generateData(url) {
+    try {
+        const usersData = await fetch(url);
+        const usersDataJson = await usersData.json();
+
+        generateGallery(usersDataJson);
+        createModel(usersDataJson);
+        generateSearchBar();
+        addEventListener();
+    } catch (err) {
+        console.error(err);
+    };
 };
 
 // ------------------------------------------
 //  HELPER FUNCTIONS
 // ------------------------------------------
-function checkStatus(response) {
-    if (response.ok === true) {
-        return Promise.resolve(response);
-    } else {
-        return Promise.reject(new Error(response.statusText));
-    };
-};
-
-async function generateData(url) {
-    const img = await fetchData(url);
-    const response = img.results.map(async data => data);
-
-    return Promise.all(response);
-};
-
-function generateHTML(data) {
-    const html = data.map((data) => `
+function generateGallery(data) {
+    const html = data.results.map((object) => `
     <div class="card">
         <div class="card-img-container">
-            <img class="card-img" src="${data.picture.thumbnail}" alt="profile picture">
+            <img class="card-img" src="${object.picture.thumbnail}" alt="profile picture">
         </div>
         <div class="card-info-container">
-            <h3 id="name" class="card-name cap">${data.name.first} ${data.name.last}</h3>
-            <p class="card-text">${data.email}</p>
-            <p class="card-text cap">${data.location.city}, ${data.location.state}</p>
+            <h3 id="name" class="card-name cap">${object.name.first} ${object.name.last}</h3>
+            <p class="card-text">${object.email}</p>
+            <p class="card-text cap">${object.location.city}, ${object.location.state}</p>
         </div>
     </div>
     `).join(' ');
 
     gallery.innerHTML = html;
     cards = document.querySelectorAll('#gallery .card');
-    return data
 };
 
 function createModel(data) {
     
-    const modalWindow = data.map(data => {
+    const modalWindow = data.results.map(data => {
         const modalData = `
         <div class="modal-container">
             <div class="modal">
@@ -73,44 +63,22 @@ function createModel(data) {
                     <p class="modal-text">123 Portland Ave., Portland, OR 97204</p>
                     <p class="modal-text">Birthday: ${data.dob.date.slice(5, 7)}/${data.dob.date.slice(8, 10)}/2021</p>
             </div>
+            <div class="modal-btn-container">
+                    <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+                    <button type="button" id="modal-next" class="modal-next btn">Next</button>
+            </div>
         </div>
         `;
         
         body.insertAdjacentHTML('beforeend', modalData);   
-        return modalData
-    })
+    });
     modalWindow.join(' ')
 
     modal = document.querySelectorAll('.modal-container');
-    modal.forEach(data => data.style.display = 'none')
+    modal.forEach(data => data.style.display = 'none');
 };
 
-
-// ------------------------------------------
-//  EVENT LISTENERS
-// ------------------------------------------
-// generateData(imgUrl)
-//     .then(generateHTML)
-//     .then(createModel)
-    
-
-// console.log(cards)
-// gallery.addEventListener('click', (e) => {
-//     const cards = document.querySelectorAll('#gallery .card')
-//     // console.log(e.target)
-//     if (e.target.className === 'card' || e.target.className === 'card-img-container' || e.target.className === 'card-info-container') {
-//         console.log(e.target)
-//     }
-//     // if (cards.includes(e.target)) {
-//     //     console.log(e.target)
-//     // }
-// })
-
-async function trigger() {
-    await generateData(imgUrl)
-            .then(generateHTML)
-            .then(createModel);
-    
+function addEventListener() {
     cards.forEach((card, i) => {
 
         cards[i].addEventListener('click', e => {
@@ -132,6 +100,15 @@ async function trigger() {
     });
 };
 
-trigger()
-// console.log(cards)
+function generateSearchBar() {
+    const searchBar = `
+    <form action="#" method="get">
+        <input type="search" id="search-input" class="search-input" placeholder="Search...">
+        <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+    </form>
+    `;
+    searchContainer.innerHTML = searchBar;
 
+};
+
+generateData(imgUrl)
