@@ -7,19 +7,21 @@ const searchContainer = document.querySelector('.search-container');
 const imgUrl = 'https://randomuser.me/api/?nat=ie&results=12';
 let cards;
 let modal;
+let usersData = [];
 
 // ------------------------------------------
 //  FETCH FUNCTION
 // ------------------------------------------
 async function generateData(url) {
     try {
-        const usersData = await fetch(url);
-        const usersDataJson = await usersData.json();
-
-        generateGallery(usersDataJson);
-        createModel(usersDataJson);
+        const res = await fetch(url);
+        usersData = await res.json();
+        mapData = usersData.results.map(data => data);
+        
+        createDiv();
         generateSearchBar();
-        addEventListener();
+        generatePage(mapData);
+
     } catch (err) {
         console.error(err);
     };
@@ -28,8 +30,8 @@ async function generateData(url) {
 // ------------------------------------------
 //  HELPER FUNCTIONS
 // ------------------------------------------
-function generateGallery(data) {
-    const html = data.results.map((object) => `
+function generatePage(data) {
+    const html = data.map((object) => `
     <div class="card">
         <div class="card-img-container">
             <img class="card-img" src="${object.picture.thumbnail}" alt="profile picture">
@@ -44,41 +46,55 @@ function generateGallery(data) {
 
     gallery.innerHTML = html;
     cards = document.querySelectorAll('#gallery .card');
+
+    createModel(mapData);
+    cardsListeners();
+};
+
+function generateSearchBar() {
+    const searchBar = `
+    <form action="#" method="get">
+        <input type="search" id="search-input" class="search-input" placeholder="Search...">
+        <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+    </form>
+    `;
+    searchContainer.innerHTML = searchBar;
+
 };
 
 function createModel(data) {
-    
-    const modalWindow = data.results.map(data => {
-        const modalData = `
-        <div class="modal-container">
-            <div class="modal">
-                <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
-                <div class="modal-info-container">
-                    <img class="modal-img" src="${data.picture.thumbnail}" alt="profile picture">
-                    <h3 id="name" class="modal-name cap">${data.name.first} ${data.name.last}</h3>
-                    <p class="modal-text">${data.email}</p>
-                    <p class="modal-text cap">city</p>
-                    <hr>
-                    <p class="modal-text">(${data.cell.slice(0, 3)}) ${data.cell.slice(4, 7)}-${data.cell.slice(8, 12)}</p>
-                    <p class="modal-text">123 Portland Ave., Portland, OR 97204</p>
-                    <p class="modal-text">Birthday: ${data.dob.date.slice(5, 7)}/${data.dob.date.slice(8, 10)}/2021</p>
-            </div>
-            <div class="modal-btn-container">
-                    <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
-                    <button type="button" id="modal-next" class="modal-next btn">Next</button>
+    const modalDiv = document.querySelector('.modals');
+
+    const modalWindow = data.map(data => `
+    <div class="modal-container">
+        <div class="modal">
+            <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+            <div class="modal-info-container">
+                <img class="modal-img" src="${data.picture.thumbnail}" alt="profile picture">
+                <h3 id="name" class="modal-name cap">${data.name.first} ${data.name.last}</h3>
+                <p class="modal-text">${data.email}</p>
+                <p class="modal-text cap">city</p>
+                <hr>
+                <p class="modal-text">(${data.cell.slice(0, 3)}) ${data.cell.slice(4, 7)}-${data.cell.slice(8, 12)}</p>
+                <p class="modal-text">123 Portland Ave., Portland, OR 97204</p>
+                <p class="modal-text">Birthday: ${data.dob.date.slice(5, 7)}/${data.dob.date.slice(8, 10)}/2021</p>
             </div>
         </div>
-        `;
-        
-        body.insertAdjacentHTML('beforeend', modalData);   
-    });
-    modalWindow.join(' ')
 
-    modal = document.querySelectorAll('.modal-container');
+        <div class="modal-btn-container">
+            <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+            <button type="button" id="modal-next" class="modal-next btn">Next</button>
+        </div>
+    </div>
+    `).join(' ');
+    
+    modalDiv.innerHTML = modalWindow;
+  
+    modal = document.querySelectorAll('.modals .modal-container');
     modal.forEach(data => data.style.display = 'none');
 };
 
-function addEventListener() {
+function cardsListeners() {
     cards.forEach((card, i) => {
 
         cards[i].addEventListener('click', e => {
@@ -100,15 +116,28 @@ function addEventListener() {
     });
 };
 
-function generateSearchBar() {
-    const searchBar = `
-    <form action="#" method="get">
-        <input type="search" id="search-input" class="search-input" placeholder="Search...">
-        <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
-    </form>
-    `;
-    searchContainer.innerHTML = searchBar;
+function createDiv() {
+    const newDiv = document.createElement('div');
+    newDiv.className = 'modals';
 
+    body.insertAdjacentElement('beforeend', newDiv);
 };
 
-generateData(imgUrl)
+// ------------------------------------------
+//  LISTENERS
+// ------------------------------------------
+searchContainer.addEventListener('keyup', e => {
+    const targetName = e.target.value.toLowerCase();
+   
+    const filterUsers = usersData.results.filter(user => {
+        return (user.name.first.toLowerCase().includes(targetName) ||
+                user.name.last.toLowerCase().includes(targetName)
+        );
+    });
+
+    generatePage(filterUsers);
+    createModel(filterUsers);
+    cardsListeners();
+});
+
+generateData(imgUrl);
