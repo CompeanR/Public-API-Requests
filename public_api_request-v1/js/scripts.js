@@ -16,6 +16,12 @@ let cardsButton;
 // ------------------------------------------
 //  FETCH FUNCTION
 // ------------------------------------------
+
+/**
+ * This function interact in async way with the response received
+ * from the API.
+ * @param {url} url Generate the request. 
+ */
 async function generateData(url) {
     try {
         const res = await fetch(url);
@@ -34,7 +40,10 @@ async function generateData(url) {
 //  HELPER FUNCTIONS
 // ------------------------------------------
 
-//This function will generate all the data from our API into the web page
+/**
+ * Load the page with the data received.
+ * @param {object} data Object response from the API request.
+ */
 function generatePage(data) {
     const html = data.map((object) => `
     <div class="card">
@@ -56,6 +65,9 @@ function generatePage(data) {
     cardsListeners();
 };
 
+/**
+ * Genereates a search bar when the page is loaded.
+ */
 function generateSearchBar() {
     const searchBar = `
     <form action="#" method="get">
@@ -67,6 +79,10 @@ function generateSearchBar() {
 
 };
 
+/**
+ * Generates all the modal windows with the data received.
+ * @param {object} data Object response from the API request.
+ */
 function createModel(data) {
     const modalDiv = document.querySelector('.modals');
 
@@ -98,9 +114,12 @@ function createModel(data) {
     modal = document.querySelectorAll('.modals .modal-container');
     modal.forEach(data => data.style.display = 'none');
 
-    cardsButton = document.querySelector('.modals .modal-container .modal-btn-container')
+    cardsButton = document.querySelector('.modals .modal-container .modal-btn-container');
 };
 
+/**
+ * Create listeners for each card and modal windows.
+ */
 function cardsListeners() {
     cards.forEach((card, i) => {
 
@@ -123,6 +142,9 @@ function cardsListeners() {
     });
 };
 
+/**
+ * Generate the DIV where our modal windows will append.
+ */
 function createDiv() {
     const newDiv = document.createElement('div');
     newDiv.className = 'modals';
@@ -133,6 +155,10 @@ function createDiv() {
 // ------------------------------------------
 //  LISTENERS
 // ------------------------------------------
+
+/**
+ * Generate the listener that match our target users with the directory.
+ */
 searchContainer.addEventListener('keyup', e => {
     const targetName = e.target.value.toLowerCase();
    
@@ -147,6 +173,9 @@ searchContainer.addEventListener('keyup', e => {
     cardsListeners();
 });
 
+/**
+ * Generate the listener that toggle back and forth between employees when the modal window is open.
+ */
 modal.addEventListener('click', e => {
 
     if (e.target.id === 'modal-next') {

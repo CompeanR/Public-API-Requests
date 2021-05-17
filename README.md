@@ -19,44 +19,49 @@ This is a random Startup employee directory with the information of 12 active em
 - Html
 - Css
 
-[Back To The Top](#Public-API-Requests)
+[Back To The Top](#public-api-requests)
 
 ---
 
 ## How To Use
 
 #### Listeners
-- startGame()
+- searchContainer()
 
-    This listener start our game at the moment that we click on the button.
+    This listener match the user introduced in the search bar.
 
-- keyboard() 
+- modal() 
 
-    This listener allow us to select words with mouse clicks.
+    This listener toggle back and forth between employees when the modal window is open..
 
-- window()
+- cardsListeners()
 
-    This listener allow us select words with our keyboard.
+    This listener allow us to click into cards and pop up the modal window.
 
 
 #### App Styles
 
-- .chosen
+- body
 
-    The background of the correct letter chosen will be green instead of blue.
+    The background switch to #007CC7.
 
-- .wrong
+- header h1
 
-    The background of the incorrect letter chosen will be red instead of orange.
+    The color property switch to #EEFBFB.
 
-- .show
+- .search-submit
 
-    The background of the correct show letters will be black instead of blue.
+    The background color property switch to #EEFBFB.
+
+- .card
+
+    The background color property switch to #4DA8DA.
+    The border color property switch to #007CC7.
 
 
 ## Author Info
 
 - Twitter - [@JCompeann](https://twitter.com/JCompeann)
 
-[Back To The Top](#oop-game-show-app)
+[Back To The Top](#public-api-requests)
 
