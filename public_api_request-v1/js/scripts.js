@@ -82,7 +82,7 @@ function createModel(data) {
                 <hr>
                 <p class="modal-text">(${data.cell.slice(0, 3)}) ${data.cell.slice(4, 7)}-${data.cell.slice(8, 12)}</p>
                 <p class="modal-text">123 Portland Ave., Portland, OR 97204</p>
-                <p class="modal-text">Birthday: ${data.dob.date.slice(5, 7)}/${data.dob.date.slice(8, 10)}/2021</p>
+                <p class="modal-text">Birthday: ${data.dob.date.slice(5, 7)}/${data.dob.date.slice(8, 10)}/${data.dob.date.slice(0, 4)}</p>
             </div>
         </div>
 
