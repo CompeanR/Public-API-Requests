@@ -29,7 +29,7 @@ header {
 }
 
 header h1 {
-    font-size: 1.25em;
+    font-size: 2em;
     color: #EEFBFB;
     margin-top: 35px;
 }
@@ -140,7 +140,7 @@ header h1 {
     min-height: 415px;
     margin: 10px auto auto;
     padding-bottom: 15px;
-    background: rgba(255, 255, 255, 1);
+    background: #EEFBFB;
     border-radius: 0.25em;
     border: 1px solid rgba(100, 100, 100, 0.3);
     transition: .4s ease-out;
@@ -151,8 +151,8 @@ header h1 {
     top: 15px;
     right: 15px;
     cursor: pointer;
-    color: rgba(255, 255, 255, 0.9);
-    background: rgba(0, 0, 0, 0.8);
+    color: #ffffffe6;
+    background: #007CC7;
     outline: none;
     border-radius: 0.25em;
     border: 1px solid rgba(50, 50, 50, 0.3);
@@ -188,7 +188,7 @@ header h1 {
     max-width: 420px;
     padding: 10px 15px 15px;;
     margin: 10px auto auto;
-    background: rgba(255, 255, 255, 1);
+    background: #EEFBFB;
     border-radius: 0.25em;
     border: 1px solid rgba(100, 100, 100, 0.3);
 }
@@ -199,9 +199,9 @@ header h1 {
     cursor: pointer;
     font-size: 0.85em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.9);
+    color: #EEFBFB;
     padding: 0.75em 1.5em;
-    background: rgba(0, 0, 0, 0.8);
+    background: #4DA8DA; 
     border-radius: 0.35em;
     transition: .4s ease-out;
     outline: none;

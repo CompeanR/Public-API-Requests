@@ -66,7 +66,7 @@ function generatePage(data) {
 };
 
 /**
- * Genereates a search bar when the page is loaded.
+ * Generates a search bar when the page is loaded.
  */
 function generateSearchBar() {
     const searchBar = `
@@ -97,7 +97,7 @@ function createModel(data) {
                 <p class="modal-text cap">city</p>
                 <hr>
                 <p class="modal-text">(${data.cell.slice(0, 3)}) ${data.cell.slice(4, 7)}-${data.cell.slice(8, 12)}</p>
-                <p class="modal-text">123 Portland Ave., Portland, OR 97204</p>
+                <p class="modal-text">${data.location.street.number} ${data.location.street.name}, ${data.location.city}, ${data.location.state} ${data.location.postcode}</p>
                 <p class="modal-text">Birthday: ${data.dob.date.slice(5, 7)}/${data.dob.date.slice(8, 10)}/${data.dob.date.slice(0, 4)}</p>
             </div>
         </div>
@@ -171,29 +171,49 @@ searchContainer.addEventListener('keyup', e => {
     generatePage(filterUsers);
     createModel(filterUsers);
     cardsListeners();
+
+    if (filterUsers.length === 0) {
+        gallery.innerHTML = '<h1>There is not matches</h1>';
+    };
 });
 
 /**
  * Generate the listener that toggle back and forth between employees when the modal window is open.
  */
 modal.addEventListener('click', e => {
+    const modalParent = document.querySelector('.modals')
+    const currentEle = e.target.parentElement.parentElement
+    const nextEle = e.target.parentElement.parentElement.nextElementSibling;
+    const previousEle = e.target.parentElement.parentElement.previousElementSibling
 
     if (e.target.id === 'modal-next') {
-        const nextEle = e.target.parentElement.parentElement.nextElementSibling;
-        
-        if (nextEle) {
-            e.target.parentElement.parentElement.style.display = 'none';
-            e.target.parentElement.parentElement.nextElementSibling.style.display = 'block';
+        switch (nextEle) {
+            case null:
+                currentEle.style.display = 'none';
+                modalParent.firstElementChild.style.display = 'block';
+                break;
+            case nextEle:
+                currentEle.style.display = 'none';
+                nextEle.style.display = 'block';
+                break;
+            default:
+                return;
         };
-        
-    } else if (e.target.id === 'modal-prev') {
-        const prevEle = e.target.parentElement.parentElement.previousElementSibling;
+    };
 
-        if (prevEle) {
-            e.target.parentElement.parentElement.style.display = 'none';
-            e.target.parentElement.parentElement.previousElementSibling.style.display = 'block';
+    if (e.target.id === 'modal-prev') {
+        switch (previousEle) {
+            case null:
+                currentEle.style.display = 'none';
+                modalParent.lastElementChild.style.display = 'block';
+                break;
+            case previousEle:
+                currentEle.style.display = 'none';
+                previousEle.style.display = 'block';
+                break;
+            default:
+                return;
         };
-
     };
 });
 
