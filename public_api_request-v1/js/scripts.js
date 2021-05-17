@@ -4,10 +4,14 @@
 const body = document.querySelector('body');
 const gallery = document.getElementById('gallery');
 const searchContainer = document.querySelector('.search-container');
-const imgUrl = 'https://randomuser.me/api/?nat=ie&results=12';
+const dataUrl = 'https://randomuser.me/api/?nat=ie&results=12';
+
+createDiv();
+
 let cards;
-let modal;
+let modal = document.querySelector('.modals')
 let usersData = [];
+let cardsButton;
 
 // ------------------------------------------
 //  FETCH FUNCTION
@@ -18,7 +22,6 @@ async function generateData(url) {
         usersData = await res.json();
         mapData = usersData.results.map(data => data);
         
-        createDiv();
         generateSearchBar();
         generatePage(mapData);
 
@@ -30,6 +33,8 @@ async function generateData(url) {
 // ------------------------------------------
 //  HELPER FUNCTIONS
 // ------------------------------------------
+
+//This function will generate all the data from our API into the web page
 function generatePage(data) {
     const html = data.map((object) => `
     <div class="card">
@@ -92,6 +97,8 @@ function createModel(data) {
   
     modal = document.querySelectorAll('.modals .modal-container');
     modal.forEach(data => data.style.display = 'none');
+
+    cardsButton = document.querySelector('.modals .modal-container .modal-btn-container')
 };
 
 function cardsListeners() {
@@ -140,4 +147,25 @@ searchContainer.addEventListener('keyup', e => {
     cardsListeners();
 });
 
-generateData(imgUrl);
+modal.addEventListener('click', e => {
+
+    if (e.target.id === 'modal-next') {
+        const nextEle = e.target.parentElement.parentElement.nextElementSibling;
+        
+        if (nextEle) {
+            e.target.parentElement.parentElement.style.display = 'none';
+            e.target.parentElement.parentElement.nextElementSibling.style.display = 'block';
+        };
+        
+    } else if (e.target.id === 'modal-prev') {
+        const prevEle = e.target.parentElement.parentElement.previousElementSibling;
+
+        if (prevEle) {
+            e.target.parentElement.parentElement.style.display = 'none';
+            e.target.parentElement.parentElement.previousElementSibling.style.display = 'block';
+        };
+
+    };
+});
+
+generateData(dataUrl);
